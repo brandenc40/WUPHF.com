@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/brandenc40/wuphf.com/controllers"
@@ -8,10 +9,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const minPhoneNumLength = 4
+
 func bindPostToWuphfParams(c *gin.Context) (*controllers.WuphfParams, error) {
 
-	smsNumber, _ := models.NewPhoneNumber(c.PostForm("sms_number"))
-	callNumber, _ := models.NewPhoneNumber(c.PostForm("call_number"))
+	var smsNumber models.PhoneNumber
+	var callNumber models.PhoneNumber
+	var err error
+
+	rawSmsNumber := c.PostForm("sms_number")
+	rawCallNumber := c.PostForm("call_number")
+	if !isValidPhoneNumber(rawSmsNumber) || !isValidPhoneNumber(rawCallNumber) {
+		return nil, errors.New("Invalid phone number.")
+	}
+	if smsNumber, err = models.NewPhoneNumber(rawSmsNumber); err != nil {
+		return nil, err
+	}
+	if callNumber, err = models.NewPhoneNumber(rawCallNumber); err != nil {
+		return nil, err
+	}
 
 	return &controllers.WuphfParams{
 		Message:    c.PostForm("message"),
@@ -22,6 +38,7 @@ func bindPostToWuphfParams(c *gin.Context) (*controllers.WuphfParams, error) {
 	}, nil
 }
 
+// WUPHF -
 func (h *Handlers) WUPHF(c *gin.Context) {
 
 	var wuphfParams *controllers.WuphfParams
@@ -39,4 +56,12 @@ func (h *Handlers) WUPHF(c *gin.Context) {
 		c.String(http.StatusOK, successMessage)
 		return
 	}
+}
+
+// Avoid usage of numbers like 911
+func isValidPhoneNumber(rawNumber string) bool {
+	if rawNumber != "" && len(rawNumber) < minPhoneNumLength {
+		return false
+	}
+	return true
 }
