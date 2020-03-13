@@ -20,7 +20,7 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 	// Send SMS
 	if params.SMSNumber != "" {
 		g.Go(func() error {
-			_, err := c.Twilio.SendSMS(params.SMSNumber.Friendly(), params.FromName, params.Message)
+			_, err := c.gateways.Twilio.SendSMS(params.SMSNumber.Friendly(), params.FromName, params.Message)
 			return err
 		})
 	}
@@ -28,7 +28,7 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 	// Place call
 	if params.CallNumber != "" {
 		g.Go(func() error {
-			_, err := c.Twilio.PlaceCall(params.CallNumber.Friendly(), params.FromName, params.Message)
+			_, err := c.gateways.Twilio.PlaceCall(params.CallNumber.Friendly(), params.FromName, params.Message)
 			return err
 		})
 	}
@@ -36,7 +36,7 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 	// Send Email
 	if params.ToEmail != "" {
 		g.Go(func() error {
-			err := c.Gmail.SendEmail(params.ToEmail, params.FromName, params.Message)
+			err := c.gateways.Gmail.SendEmail(params.ToEmail, params.FromName, params.Message)
 			return err
 		})
 	}

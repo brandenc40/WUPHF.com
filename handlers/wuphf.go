@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/brandenc40/wuphf.com/common.go"
+	"github.com/brandenc40/wuphf.com/common"
 	"github.com/brandenc40/wuphf.com/controllers"
 	"github.com/brandenc40/wuphf.com/models"
 	"github.com/gin-gonic/gin"
@@ -55,7 +55,7 @@ func (h *Handlers) WUPHF(c *gin.Context) {
 		return
 	}
 
-	if err := h.SendWuphf(wuphfParams); err != nil {
+	if err := h.controllers.SendWuphf(wuphfParams); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	} else {
