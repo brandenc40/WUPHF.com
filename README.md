@@ -2,7 +2,7 @@
 
 ### You must add a secrets.yaml file to the config/ folder with the following:
 
-```
+```yaml
 twilio:
   account_sid: <TWILIO SID>
   auth_token: <TWILIO AUTH TOKEN>
@@ -15,7 +15,7 @@ gmail:
 
 ### You'll also need a twIML template for the phone call. This is what I use:
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
 <Say>
