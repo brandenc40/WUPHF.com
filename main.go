@@ -14,6 +14,7 @@ func main() {
 		FromName:   "Ryan Howard",
 		SMSNumber:  "+1 563-343-5557",
 		CallNumber: "+1 563-343-5557",
+		ToEmail:    "brandencolen@gmail.com",
 	}
 	_ = controller.SendWuphf(&params)
 

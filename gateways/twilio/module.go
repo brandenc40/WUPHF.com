@@ -22,8 +22,8 @@ var successCodes = map[int]bool{
 }
 
 type Twilio interface {
-	SendSMS(toNumber string, message string) (*models.SmsResponse, error)
-	PlaceCall(toNumber string) (*models.CallResponse, error)
+	SendSMS(toNumber string, fromName string, message string) (*models.SmsResponse, error)
+	PlaceCall(toNumber string, fromName string, message string) (*models.CallResponse, error)
 }
 
 type TwilioClient struct {

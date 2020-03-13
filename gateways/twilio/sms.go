@@ -78,6 +78,6 @@ func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string)
 }
 
 func buildSMSMessage(fromName string, message string) string {
-	template := viper.GetString("twilio.sms_template")
+	template := viper.GetString("messages.sms_template")
 	return fmt.Sprintf(template, fromName, message)
 }

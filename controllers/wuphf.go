@@ -12,17 +12,17 @@ type WuphfParams struct {
 	FromName   string
 	SMSNumber  models.PhoneNumber
 	CallNumber models.PhoneNumber
+	ToEmail    string
 }
 
 func (c *Controllers) SendWuphf(params *WuphfParams) error {
 
-	var err error
 	var g errgroup.Group
 
 	// Send SMS
 	if params.SMSNumber != "" {
 		g.Go(func() error {
-			_, err = c.Twilio.SendSMS(params.SMSNumber.Friendly(), params.FromName, params.Message)
+			_, err := c.Twilio.SendSMS(params.SMSNumber.Friendly(), params.FromName, params.Message)
 			return err
 		})
 	}
@@ -30,16 +30,25 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 	// Place call
 	if params.CallNumber != "" {
 		g.Go(func() error {
-			_, err = c.Twilio.PlaceCall(params.CallNumber.Friendly(), params.FromName, params.Message)
+			_, err := c.Twilio.PlaceCall(params.CallNumber.Friendly(), params.FromName, params.Message)
 			return err
 		})
 	}
 
-	if err = g.Wait(); err != nil {
+	// Send email
+	if params.ToEmail != "" {
+		g.Go(func() error {
+			err := c.Gmail.SendEmail(params.ToEmail, params.FromName, params.Message)
+			return err
+		})
+	}
+
+	if err := g.Wait(); err != nil {
 		fmt.Printf("received error: %v", err) // TODO use zap
+		return err
 	} else {
 		fmt.Println("finished clean") // TODO remove
 	}
 
-	return err
+	return nil
 }

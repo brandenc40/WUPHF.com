@@ -6,4 +6,8 @@
 twilio:
   account_sid: <TWILIO SID>
   auth_token: <TWILIO AUTH TOKEN>
+
+gmail:
+  email: <EMAIL ADDRESS>
+  password: <PASSWORD>
 ```
