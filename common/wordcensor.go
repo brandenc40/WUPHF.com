@@ -44,6 +44,7 @@ func ContainsCurseWords(str string) bool {
 	if str == "" {
 		return false
 	}
+	str = strings.ToLower(str)
 	for _, word := range badwords {
 		if strings.Contains(str, word) {
 			return true
