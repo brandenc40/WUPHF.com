@@ -4,6 +4,8 @@ go 1.13
 
 require (
 	github.com/spf13/viper v1.6.2
+	github.com/ttacon/builder v0.0.0-20170518171403-c099f663e1c2 // indirect
+	github.com/ttacon/libphonenumber v1.1.0
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.14.0
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect

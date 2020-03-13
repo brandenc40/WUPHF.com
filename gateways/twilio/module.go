@@ -3,6 +3,7 @@ package twilio
 import (
 	"net/http"
 
+	"github.com/brandenc40/wuphf.com/models"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -10,9 +11,9 @@ import (
 const (
 	baseURL           = "https://api.twilio.com/2010-04-01"
 	messagesEndpoint  = "/Messages.json"
+	callsEndpoint     = "/Calls.json"
 	headerAccept      = "application/json"
 	headerContentType = "application/x-www-form-urlencoded"
-	twilioNumber      = "+1 205-719-8997"
 )
 
 var successCodes = map[int]bool{
@@ -21,7 +22,8 @@ var successCodes = map[int]bool{
 }
 
 type Twilio interface {
-	SendSMS(toNumber string, message string) (*SmsResponse, error)
+	SendSMS(toNumber string, message string) (*models.SmsResponse, error)
+	PlaceCall(toNumber string) (*models.CallResponse, error)
 }
 
 type TwilioClient struct {

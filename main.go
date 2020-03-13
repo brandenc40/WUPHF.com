@@ -10,8 +10,10 @@ func main() {
 
 	controller := controllers.New()
 	params := controllers.WuphfParams{
-		Message:   "test",
-		SMSNumber: "+1 563-343-5557",
+		Message:    "Decided to sell company. Thanks, bro. Hell of a ride.",
+		FromName:   "Ryan Howard",
+		SMSNumber:  "+1 563-343-5557",
+		CallNumber: "+1 563-343-5557",
 	}
 	_ = controller.SendWuphf(&params)
 

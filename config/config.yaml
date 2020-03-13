@@ -1,0 +1,4 @@
+twilio:
+  phone_number: +1 205-719-8997
+  call_url: https://handler.twilio.com/twiml/EHceb176456864dd4546c2196c6dcbeaf2
+  sms_template: WUPHF from %s, %s
