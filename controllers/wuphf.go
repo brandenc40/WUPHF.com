@@ -1,18 +1,16 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/brandenc40/wuphf.com/models"
 	"golang.org/x/sync/errgroup"
 )
 
 type WuphfParams struct {
-	Message    string
-	FromName   string
-	SMSNumber  models.PhoneNumber
-	CallNumber models.PhoneNumber
-	ToEmail    string
+	Message    string             `json:"message"`
+	FromName   string             `json:"from_name"`
+	SMSNumber  models.PhoneNumber `json:"sms_number"`
+	CallNumber models.PhoneNumber `json:"call_number"`
+	ToEmail    string             `json:"to_email"`
 }
 
 func (c *Controllers) SendWuphf(params *WuphfParams) error {
@@ -35,7 +33,7 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 		})
 	}
 
-	// Send email
+	// Send Email
 	if params.ToEmail != "" {
 		g.Go(func() error {
 			err := c.Gmail.SendEmail(params.ToEmail, params.FromName, params.Message)
@@ -44,10 +42,7 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 	}
 
 	if err := g.Wait(); err != nil {
-		fmt.Printf("received error: %v", err) // TODO use zap
 		return err
-	} else {
-		fmt.Println("finished clean") // TODO remove
 	}
 
 	return nil
