@@ -10,6 +10,7 @@ type PhoneNumber string
 
 const minPhoneNumLength = 4
 
+// NewPhoneNumber -
 func NewPhoneNumber(pn string) (PhoneNumber, error) {
 	if pn == "" {
 		return "", nil
@@ -23,8 +24,8 @@ func NewPhoneNumber(pn string) (PhoneNumber, error) {
 	case err != nil:
 		return "", err
 	}
-	if len(num.String()) < minPhoneNumLength {
-		return "", fmt.Errorf("Invlid number, must be longer than %d digits", minPhoneNumLength)
+	if len(num.String()) < minPhoneNumLength || !libphonenumber.IsValidNumber(num) {
+		return "", fmt.Errorf("Invlid phone number %s", pn)
 	}
 	return PhoneNumber(libphonenumber.Format(num, libphonenumber.E164)), nil
 }
