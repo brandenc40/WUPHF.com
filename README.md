@@ -38,3 +38,5 @@ Woof from {{from_name}}, {{message}}.
 # Then..
 make run
 ```
+
+## Hosting (COMING SOON)
