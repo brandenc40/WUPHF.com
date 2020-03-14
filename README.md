@@ -4,7 +4,7 @@
 
 ## Running Locally
 
-### You must add a secrets.yaml file to the config/ folder with the following:
+### 1. You must add a secrets.yaml file to the config/ folder with the following:
 
 ```yaml
 twilio:
@@ -17,7 +17,7 @@ gmail:
   password: <PASSWORD>
 ```
 
-### You'll also need a TwIML template for the phone call. The app is set to use the `from_name` and `message` variables and replace them with what's inputted by the user.
+### 2. You'll also need a TwIML template for the phone call. The app is set to use the `from_name` and `message` variables and replace them with what's inputted by the user.
 
 #### These can be created here https://www.twilio.com/console/twiml-bins
 
@@ -28,4 +28,13 @@ gmail:
 Woof from {{from_name}}, {{message}}.
 </Say>
 </Response>
+```
+
+### 3. Use the following command to run the app
+
+```zsh
+# First.. cd into the app directory
+
+# Then..
+make run
 ```
