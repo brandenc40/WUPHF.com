@@ -8,6 +8,9 @@ import (
 	"github.com/brandenc40/wuphf.com/config"
 	"github.com/brandenc40/wuphf.com/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/ulule/limiter/v3"
+	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"
+	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"go.uber.org/zap"
 )
 
@@ -19,18 +22,16 @@ func main() {
 			zap.Error(err),
 		)
 	}
+
 	context := common.NewAppContext()
 	handlers := handlers.New(context)
 
-	// controller := controllers.New()
-	// params := controllers.WuphfParams{
-	// 	Message:    "Decided to sell company. Thanks, bro. Hell of a ride.",
-	// 	FromName:   "Ryan Howard",
-	// 	SMSNumber:  "+1 563-343-5557",
-	// 	CallNumber: "+1 563-343-5557",
-	// 	ToEmail:    "brandencolen@gmail.com",
-	// }
-	// _ = controller.SendWuphf(&params)
+	// 2000 per 30 days limit
+	rate := limiter.Rate{
+		Period: 1 * (time.Hour * 24 * 30),
+		Limit:  2000,
+	}
+	rateLimiter := mgin.NewMiddleware(limiter.New(memory.NewStore(), rate))
 
 	r := gin.Default()
 
@@ -55,6 +56,8 @@ func main() {
 	// API Routes
 	api := r.Group("/api")
 	{
+		// Rate limiters
+		api.Use(rateLimiter)
 		api.GET("/ping", func(c *gin.Context) {
 			c.String(http.StatusOK, "Ping")
 		})

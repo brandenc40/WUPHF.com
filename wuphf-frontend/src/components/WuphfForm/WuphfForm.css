@@ -9,6 +9,10 @@
   font-weight: bold;
 }
 
+#website {
+  display: none;
+}
+
 .wuphf-form-textarea {
   width: 90%;
   height: 10vh;

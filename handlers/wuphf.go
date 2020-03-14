@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/brandenc40/wuphf.com/common"
@@ -12,6 +11,11 @@ import (
 )
 
 func bindPostToWuphfParams(c *gin.Context) (*controllers.WuphfParams, error) {
+
+	// Check if hidden form is filled out
+	if c.PostForm("website") != "" {
+		return nil, errors.New("No bots, please")
+	}
 
 	var smsNumber models.PhoneNumber
 	var callNumber models.PhoneNumber
@@ -55,8 +59,6 @@ func (h *Handlers) WUPHF(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-
-	fmt.Println(wuphfParams)
 
 	if err := h.controllers.SendWuphf(wuphfParams); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())

@@ -10,6 +10,16 @@ function App() {
       <div className='donate'>
         <PaypalDonate></PaypalDonate>
       </div>
+      <div>
+        <a
+          className='github-link'
+          href='https://github.com/brandenc40/WUPHF.com'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          Github
+        </a>
+      </div>
     </div>
   );
 }

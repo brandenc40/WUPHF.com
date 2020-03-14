@@ -74,6 +74,7 @@ export default class WuphfForm extends React.Component {
             placeholder={option.placeholder}
             onChange={this.handleChange.bind(this)}
             value={this.state.formFields[option.key]}
+            required={option.required}
           />
         ) : (
           <input
@@ -84,6 +85,7 @@ export default class WuphfForm extends React.Component {
             placeholder={option.placeholder}
             onChange={this.handleChange.bind(this)}
             value={this.state.formFields[option.key]}
+            required={option.required}
           />
         )}
       </div>
