@@ -1,9 +1,17 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
 .App {
   text-align: center;
-  margin-top: 10vh;
+  margin-top: 6vh;
 }
 
 html {
   background-color: black;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: montserrat, Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.donate {
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }

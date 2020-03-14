@@ -1,5 +1,9 @@
 # WUPHF.com
 
+![App Screenshot](app-screenshot.png)
+
+## Running Locally
+
 ### You must add a secrets.yaml file to the config/ folder with the following:
 
 ```yaml
@@ -13,7 +17,7 @@ gmail:
   password: <PASSWORD>
 ```
 
-### You'll also need a twIML template for the phone call. This is what I use:
+### You'll also need a TwIML template for the phone call. The app is set to use the `from_name` and `message` variables and replace them with what's inputted by the user.
 
 #### These can be created here https://www.twilio.com/console/twiml-bins
 

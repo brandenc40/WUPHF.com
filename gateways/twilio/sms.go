@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -15,10 +14,9 @@ import (
 )
 
 // SendSMS -
-func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string) (*models.SmsResponse, error) {
+func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string) (*http.Response, error) {
 
 	// Set initial variables
-	smsResponse := models.SmsResponse{}
 	accountSid, authToken := getAuthCredentials()
 	urlStr := baseURL + "/Accounts/" + accountSid + messagesEndpoint
 
@@ -44,13 +42,15 @@ func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string)
 	// Handle the response
 	resp, err := t.httpClient.Do(req)
 	if !successCodes[resp.StatusCode] {
-		errorBody, _ := ioutil.ReadAll(resp.Body)
+		errStruct := models.TwilioError{}
+		json.NewDecoder(resp.Body).Decode(&errStruct)
 		t.logger.Error(
 			"Twilio returned a non 200 status code when sending SMS",
 			zap.String("response_status", resp.Status),
-			zap.ByteString("error_body", errorBody),
+			zap.String("error_message", errStruct.Message),
+			zap.Int("error_code", errStruct.Code),
 		)
-		return nil, errors.New(string(errorBody))
+		return nil, errors.New(string(errStruct.Message))
 	} else if err != nil {
 		t.logger.Error(
 			"Error sending sms",
@@ -58,16 +58,14 @@ func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string)
 		)
 		return nil, err
 	}
-	responseBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		t.logger.Error(
-			"Unable to read the reponse body to a string",
-			zap.Error(err),
-		)
-		return nil, err
-	}
-	err = json.Unmarshal(responseBody, &smsResponse)
-	if err != nil {
+
+	return resp, nil
+}
+
+func (t *TwilioClient) UnmarshalSmsResponse(resp *http.Response) (*models.SmsResponse, error) {
+	smsResponse := models.SmsResponse{}
+
+	if err := json.NewDecoder(resp.Body).Decode(&smsResponse); err != nil {
 		t.logger.Error(
 			"Unable to unmarshal response body to struct",
 			zap.Error(err),

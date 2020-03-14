@@ -3,7 +3,6 @@ package twilio
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -14,10 +13,9 @@ import (
 )
 
 // SendSMS -
-func (t *TwilioClient) PlaceCall(toNumber string, fromName string, message string) (*models.CallResponse, error) {
+func (t *TwilioClient) PlaceCall(toNumber string, fromName string, message string) (*http.Response, error) {
 
 	// Set initial variables
-	callResponse := models.CallResponse{}
 	accountSid, authToken := getAuthCredentials()
 	urlStr := baseURL + "/Accounts/" + accountSid + callsEndpoint
 
@@ -43,13 +41,15 @@ func (t *TwilioClient) PlaceCall(toNumber string, fromName string, message strin
 	// Handle the response
 	resp, err := t.httpClient.Do(req)
 	if !successCodes[resp.StatusCode] {
-		errorBody, _ := ioutil.ReadAll(resp.Body)
+		errStruct := models.TwilioError{}
+		json.NewDecoder(resp.Body).Decode(&errStruct)
 		t.logger.Error(
 			"Twilio returned a non 200 status code when placing Call",
 			zap.String("response_status", resp.Status),
-			zap.ByteString("error_body", errorBody),
+			zap.String("error_body", errStruct.Message),
+			zap.Int("error_code", errStruct.Code),
 		)
-		return nil, errors.New(string(errorBody))
+		return nil, errors.New(string(errStruct.Message))
 	} else if err != nil {
 		t.logger.Error(
 			"Error sending sms",
@@ -57,16 +57,13 @@ func (t *TwilioClient) PlaceCall(toNumber string, fromName string, message strin
 		)
 		return nil, err
 	}
-	responseBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		t.logger.Error(
-			"Unable to read the reponse body to a string",
-			zap.Error(err),
-		)
-		return nil, err
-	}
-	err = json.Unmarshal(responseBody, &callResponse)
-	if err != nil {
+	return resp, nil
+}
+
+func (t *TwilioClient) UnmarsahlCallResponse(resp *http.Response) (*models.CallResponse, error) {
+	callResponse := models.CallResponse{}
+
+	if err := json.NewDecoder(resp.Body).Decode(&callResponse); err != nil {
 		t.logger.Error(
 			"Unable to unmarshal response body to struct",
 			zap.Error(err),

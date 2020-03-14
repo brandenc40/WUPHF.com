@@ -66,9 +66,6 @@ export default class WuphfForm extends React.Component {
 
     let formUI = formOptions.map((option, i) => (
       <div key={i} className='wuphf-form-input-div'>
-        <label className='wuphf-form-label' htmlFor={option.key}>
-          {option.labelText}
-        </label>
         {option.inputType === 'textarea' ? (
           <textarea
             className='wuphf-form-textarea'
@@ -102,11 +99,11 @@ export default class WuphfForm extends React.Component {
           {this.renderFormOptions()}
           <button className='wuphf-submit-button'>Send Wuphf!</button>
         </form>
-        <div>{this.state.errorMsg}</div>
+        <div className='wuphf-error'>{this.state.errorMsg}</div>
         <div className='loading-spinner'>
           <ClipLoader
             size={100}
-            color={'#0102fc'}
+            color={'#524A93'}
             loading={this.state.loading}
           />
         </div>
