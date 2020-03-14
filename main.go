@@ -47,21 +47,19 @@ func main() {
 	r.Static("/static", "./wuphf-frontend/build/static/")
 	r.StaticFile("/manifest.json", "./wuphf-frontend/build/manifest.json")
 	r.StaticFile("/favicon.ico", "./wuphf-frontend/build/favicon.ico")
-	r.StaticFile("/logo192.png", "./wuphf-frontend/build/logo192.png")
-	r.StaticFile("/logo512.png", "./wuphf-frontend/build/logo512.png")
-	// send all non API or Auth traffic to the React App
-	r.NoRoute(func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
-	})
+	r.StaticFile("/logo192.png", "./wuphf-frontend/build/logo.png")
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
 	// API Routes
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "Ping")
-	})
-	r.POST("/wuphf", handlers.WUPHF)
+	api := r.Group("/api")
+	{
+		api.GET("/ping", func(c *gin.Context) {
+			c.String(http.StatusOK, "Ping")
+		})
+		api.POST("/wuphf", handlers.WUPHF)
+	}
 
 	s.ListenAndServe()
 }

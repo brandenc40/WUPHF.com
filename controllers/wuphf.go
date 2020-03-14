@@ -1,19 +1,25 @@
 package controllers
 
 import (
+	"errors"
+
 	"github.com/brandenc40/wuphf.com/models"
 	"golang.org/x/sync/errgroup"
 )
 
 type WuphfParams struct {
-	Message    string             `json:"message"`
-	FromName   string             `json:"from_name"`
-	SMSNumber  models.PhoneNumber `json:"sms_number"`
-	CallNumber models.PhoneNumber `json:"call_number"`
-	ToEmail    string             `json:"to_email"`
+	Message    string             `json:"message",form:"message"`
+	FromName   string             `json:"from_name",form:"from_name"`
+	SMSNumber  models.PhoneNumber `json:"sms_number",form:"sms_number"`
+	CallNumber models.PhoneNumber `json:"call_number",form:"call_number"`
+	ToEmail    string             `json:"to_email",form:"to_email"`
 }
 
 func (c *Controllers) SendWuphf(params *WuphfParams) error {
+
+	if err := validateParams(params); err != nil {
+		return err
+	}
 
 	var g errgroup.Group
 
@@ -45,5 +51,12 @@ func (c *Controllers) SendWuphf(params *WuphfParams) error {
 		return err
 	}
 
+	return nil
+}
+
+func validateParams(params *WuphfParams) error {
+	if params.ToEmail == "" && params.CallNumber == "" && params.SMSNumber == "" {
+		return errors.New("Must include an email, call phone, or sms phone.")
+	}
 	return nil
 }

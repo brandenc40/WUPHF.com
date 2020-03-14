@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/brandenc40/wuphf.com/common"
@@ -54,6 +55,8 @@ func (h *Handlers) WUPHF(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+
+	fmt.Println(wuphfParams)
 
 	if err := h.controllers.SendWuphf(wuphfParams); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
