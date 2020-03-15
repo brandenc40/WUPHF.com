@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/brandenc40/wuphf.com/models"
@@ -22,7 +23,7 @@ func (t *TwilioClient) PlaceCall(toNumber string, fromName string, message strin
 	// Build out the data for our message
 	values := url.Values{}
 	values.Set("To", toNumber)
-	values.Set("From", viper.GetString("twilio.phone_number"))
+	values.Set("From", os.Getenv("TWILIO_PHONE_NUMBER"))
 	values.Set("Url", MakeCallUrl(fromName, message))
 
 	// Make the request
