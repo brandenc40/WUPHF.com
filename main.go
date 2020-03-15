@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/brandenc40/wuphf.com/common"
@@ -16,6 +17,7 @@ import (
 
 func main() {
 	logger, _ := zap.NewProduction()
+
 	if err := config.LoadConfig(); err != nil {
 		logger.Error(
 			"Unable to load config files",
@@ -26,17 +28,21 @@ func main() {
 	context := common.NewAppContext()
 	handlers := handlers.New(context)
 
-	// 2000 per 30 days limit
+	// 2000 per 30 days limit ($20 worth)
 	rate := limiter.Rate{
 		Period: 1 * (time.Hour * 24 * 30),
-		Limit:  2000,
+		Limit:  1000,
 	}
 	rateLimiter := mgin.NewMiddleware(limiter.New(memory.NewStore(), rate))
 
+	// Build router
 	r := gin.Default()
-
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	s := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":" + port,
 		Handler:        r,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -53,14 +59,16 @@ func main() {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
+	// Endpoint to check if the app is running properly
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "Ping")
+	})
+
 	// API Routes
 	api := r.Group("/api")
 	{
 		// Rate limiters
 		api.Use(rateLimiter)
-		api.GET("/ping", func(c *gin.Context) {
-			c.String(http.StatusOK, "Ping")
-		})
 		api.POST("/wuphf", handlers.WUPHF)
 	}
 

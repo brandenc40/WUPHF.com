@@ -1,6 +1,9 @@
 package config
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/spf13/viper"
 )
 
@@ -16,7 +19,12 @@ func LoadConfig() error {
 
 	viper.SetConfigName("secrets.yaml")
 	if err := viper.MergeInConfig(); err != nil {
-		return err
+		fmt.Println("No secrets.yaml file found, the app will look for env variables instead")
+	} else {
+		os.Setenv("TWILIO_ACCOUNT_SID", viper.GetString("twilio.account_sid"))
+		os.Setenv("TWILIO_AUTH_TOKEN", viper.GetString("twilio.auth_token"))
+		os.Setenv("TWILIO_PHONE_NUMBER", viper.GetString("twilio.phone_number"))
 	}
+
 	return nil
 }

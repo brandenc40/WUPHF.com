@@ -2,9 +2,9 @@ package twilio
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/brandenc40/wuphf.com/models"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -40,7 +40,7 @@ func NewTwilioClient() *TwilioClient {
 }
 
 func getAuthCredentials() (string, string) {
-	accountSid := viper.GetString("twilio.account_sid")
-	authToken := viper.GetString("twilio.auth_token")
+	accountSid := os.Getenv("TWILIO_ACCOUNT_SID")
+	authToken := os.Getenv("TWILIO_AUTH_TOKEN")
 	return accountSid, authToken
 }

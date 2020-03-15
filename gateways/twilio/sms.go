@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/brandenc40/wuphf.com/models"
@@ -23,7 +24,7 @@ func (t *TwilioClient) SendSMS(toNumber string, fromName string, message string)
 	// Build out the data for our message
 	values := url.Values{}
 	values.Set("To", toNumber)
-	values.Set("From", viper.GetString("twilio.phone_number"))
+	values.Set("From", os.Getenv("TWILIO_PHONE_NUMBER"))
 	values.Set("Body", buildSMSMessage(fromName, message))
 
 	// Make the request

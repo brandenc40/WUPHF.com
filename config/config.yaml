@@ -2,8 +2,13 @@ twilio:
   call_url: https://handler.twilio.com/twiml/EHceb176456864dd4546c2196c6dcbeaf2
 
 messages:
-  sms_template: WUPHF from %s, %s
+  sms_template: WUPHF from %s. %s
   email_template: |
     WUPHF from %s: 
 
     %s
+
+env_variables:
+  - twilio_account_sid
+  - twilio_auth_token
+  - twilio_phone_number

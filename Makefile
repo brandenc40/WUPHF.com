@@ -1,9 +1,9 @@
 REACT_PATH = wuphf-frontend/
 
-.PHONY: run mod mod-run test drop-db build-js build-go dev-react
+.PHONY: run mod mod-run test drop-db build-js build-go dev-react move-js-build
 
 # Build final react bundle then run the go server
-run: build-js
+run: build-js move-js-build
 	@echo Running..
 	@go run main.go
 	
