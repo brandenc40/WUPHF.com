@@ -3,10 +3,7 @@ twilio:
 
 messages:
   sms_template: WUPHF from %s. %s
-  email_template: |
-    WUPHF from %s: 
-
-    %s
+  email_subject: WUPHF from %s
 
 env_variables:
   - twilio_account_sid

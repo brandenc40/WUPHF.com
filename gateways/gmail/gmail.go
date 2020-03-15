@@ -40,7 +40,7 @@ const (
 	gmailPort = "587"
 )
 
-func (g *GmailClient) SendEmail(toEmail string, toName string, message string) error {
+func (g *GmailClient) SendEmail(toEmail string, fromName string, message string) error {
 	smtpServer := smtpServer{host: gmailHost, port: gmailPort}
 	toEmailSlice := []string{toEmail}
 	fromEmail := os.Getenv("GMAIL_ADDRESS")
@@ -59,7 +59,7 @@ func (g *GmailClient) SendEmail(toEmail string, toName string, message string) e
 		auth,
 		fromEmail,
 		toEmailSlice,
-		buildEmailMessage(toName, message),
+		composeMessage(fromName, toEmail, message),
 	)
 	if err != nil {
 		g.logger.Error(
@@ -72,8 +72,14 @@ func (g *GmailClient) SendEmail(toEmail string, toName string, message string) e
 	return nil
 }
 
-func buildEmailMessage(fromName string, message string) []byte {
-	template := viper.GetString("messages.email_template")
-	formatted := fmt.Sprintf(template, fromName, message)
-	return []byte(formatted)
+func composeMessage(from string, to string, body string) []byte {
+	subjectText := viper.GetString("messages.email_subject")
+	subjectText = fmt.Sprintf(subjectText, from)
+
+	message := "From: " + from + "\n" +
+		"To: " + to + "\n" +
+		"Subject: " + subjectText + "\n\n" +
+		body
+
+	return []byte(message)
 }
