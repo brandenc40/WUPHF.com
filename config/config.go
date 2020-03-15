@@ -24,6 +24,8 @@ func LoadConfig() error {
 		os.Setenv("TWILIO_ACCOUNT_SID", viper.GetString("twilio.account_sid"))
 		os.Setenv("TWILIO_AUTH_TOKEN", viper.GetString("twilio.auth_token"))
 		os.Setenv("TWILIO_PHONE_NUMBER", viper.GetString("twilio.phone_number"))
+		os.Setenv("GMAIL_ADDRESS", viper.GetString("gmail.email"))
+		os.Setenv("GMAIL_PASSWORD", viper.GetString("gmail.password"))
 	}
 
 	return nil

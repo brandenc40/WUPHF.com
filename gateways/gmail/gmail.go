@@ -3,6 +3,7 @@ package gmail
 import (
 	"fmt"
 	"net/smtp"
+	"os"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -42,13 +43,13 @@ const (
 func (g *GmailClient) SendEmail(toEmail string, toName string, message string) error {
 	smtpServer := smtpServer{host: gmailHost, port: gmailPort}
 	toEmailSlice := []string{toEmail}
-	fromEmail := viper.GetString("gmail.email")
+	fromEmail := os.Getenv("GMAIL_ADDRESS")
 
 	// Authentication.
 	auth := smtp.PlainAuth(
 		"",
 		fromEmail,
-		viper.GetString("gmail.password"),
+		os.Getenv("GMAIL_PASSWORD"),
 		smtpServer.host,
 	)
 
