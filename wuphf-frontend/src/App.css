@@ -22,3 +22,14 @@ html {
   left: 5px;
   color: gray;
 }
+
+.form-holder {
+  width: 60%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 900px) {
+  .form-holder {
+    width: 90%;
+  }
+}

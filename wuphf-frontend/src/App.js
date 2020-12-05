@@ -6,7 +6,9 @@ import { formOptions } from './constants/formOptions';
 function App() {
   return (
     <div className='App'>
-      <WuphfForm formOptions={formOptions}></WuphfForm>
+      <div className='form-holder'>
+        <WuphfForm formOptions={formOptions}></WuphfForm>
+      </div>
       <div className='donate'>
         <PaypalDonate></PaypalDonate>
       </div>

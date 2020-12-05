@@ -11,7 +11,7 @@ export default class WuphfForm extends React.Component {
   constructor(props) {
     super(props);
 
-    var formFields = {};
+    const formFields = {};
     this.props.formOptions.forEach(option => {
       formFields[option.key] = '';
     });
@@ -31,7 +31,7 @@ export default class WuphfForm extends React.Component {
       loading: true
     });
 
-    var formData = new FormData();
+    const formData = new FormData();
     this.props.formOptions.forEach(option => {
       formData.append(option.key, this.state.formFields[option.key]);
     });

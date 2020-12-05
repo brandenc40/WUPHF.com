@@ -10,7 +10,7 @@ import (
 	"github.com/brandenc40/wuphf.com/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/ulule/limiter/v3"
-	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"
+	mGin "github.com/ulule/limiter/v3/drivers/middleware/gin"
 	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"go.uber.org/zap"
 )
@@ -33,21 +33,10 @@ func main() {
 		Period: 1 * (time.Hour * 24 * 30),
 		Limit:  1000,
 	}
-	rateLimiter := mgin.NewMiddleware(limiter.New(memory.NewStore(), rate))
+	rateLimiter := mGin.NewMiddleware(limiter.New(memory.NewStore(), rate))
 
 	// Build router
 	r := gin.Default()
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	s := &http.Server{
-		Addr:           ":" + port,
-		Handler:        r,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
 
 	// Load HTML and static from React App
 	r.LoadHTMLGlob("wuphf-frontend/build/*.html")
@@ -72,5 +61,9 @@ func main() {
 		api.POST("/wuphf", handlers.WUPHF)
 	}
 
-	s.ListenAndServe()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8081"
+	}
+	r.Run(":" + port)
 }
